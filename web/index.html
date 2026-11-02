@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827"><meta name="description" content="دستیار سه‌هوشه">
+<title>دستیار سه‌هوشه</title><link rel="stylesheet" href="styles.css">
+</head>
+<body><main class="app-shell">
+<header class="topbar"><div><p class="eyebrow">Dastیار 3Houshe</p><h1>دستیار سه‌هوشه</h1><p class="subhead">یک پرسش، سه دیدگاه؛ مقایسه در یک صفحه</p></div><button id="historyToggle" class="icon-button" aria-label="نمایش تاریخچه">☷</button></header>
+<section class="service-row" aria-label="وضعیت سرویس‌ها">
+<div class="service"><span class="dot"></span><b>ChatGPT</b><small>اتصال API نشده</small></div>
+<div class="service"><span class="dot"></span><b>DeepSeek</b><small>اتصال API نشده</small></div>
+<div class="service"><span class="dot"></span><b>Copilot</b><small>اتصال مستقیم بررسی نشده</small></div>
+</section>
+<section id="historyPanel" class="history-panel hidden"><div class="section-heading"><h2>گفتگوهای ذخیره‌شده</h2><button id="clearHistory" class="text-button">پاک‌کردن تاریخچه</button></div><div id="historyList" class="history-list"></div></section>
+<section class="welcome" id="welcome"><div class="orb">3</div><h2>چه چیزی می‌خواهی بپرسی؟</h2><p>پرسشت را بنویس یا با میکروفون بگو. در این نسخه رابط و ذخیرهٔ محلی فعال است؛ برای پاسخ واقعی باید سرویس‌ها متصل شوند.</p></section>
+<section id="results" class="results" aria-live="polite"></section>
+<form id="promptForm" class="composer"><textarea id="prompt" rows="2" placeholder="پیام خود را بنویسید..." aria-label="متن پرسش"></textarea><div class="composer-actions"><div class="left-actions"><button id="micButton" class="icon-button" type="button" aria-label="ورودی صوتی">🎙</button><button id="speakButton" class="icon-button" type="button" aria-label="خواندن متن">🔊</button></div><button id="sendButton" class="send-button" type="submit">ارسال پرسش</button></div><p id="voiceStatus" class="hint" role="status">برای استفاده از میکروفون، اجازهٔ دسترسی مرورگر را بدهید.</p></form>
+<footer>نسخهٔ آزمایشی · پاسخ واقعی مدل‌ها پس از راه‌اندازی Backend فعال می‌شود.</footer>
+</main><script src="app.js"></script></body></html>

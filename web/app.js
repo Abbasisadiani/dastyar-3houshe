@@ -1,0 +1,15 @@
+(() => {
+const $=id=>document.getElementById(id),form=$('promptForm'),input=$('prompt'),results=$('results'),welcome=$('welcome'),KEY='dastyar3houshe.history.v1';
+let history=[];try{history=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{}
+const directionOf=t=>/[\u0590-\u08FF]/.test(t)?'rtl':'ltr';
+function card(title,body,status){const a=document.createElement('article');a.className='result-card';const h=document.createElement('h3');h.textContent=title;const p=document.createElement('p');p.textContent=body;p.dir=directionOf(body);const s=document.createElement('div');s.className='status';s.textContent=status;a.append(h,p,s);results.append(a)}
+function render(){const list=$('historyList');list.replaceChildren();if(!history.length){const p=document.createElement('p');p.className='muted';p.textContent='هنوز گفتگویی ذخیره نشده است.';list.append(p);return}history.forEach(x=>{const b=document.createElement('button');b.className='history-item';b.type='button';b.textContent=x.prompt;b.onclick=()=>{input.value=x.prompt;results.replaceChildren();card('پرسش ذخیره‌شده',x.prompt,'از تاریخچه محلی')};list.append(b)})}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(history.slice(0,50)))}catch{$('voiceStatus').textContent='ذخیره‌سازی محلی در دسترس نیست.'}render()}
+form.addEventListener('submit',e=>{e.preventDefault();const q=input.value.trim();if(!q)return;welcome.classList.add('hidden');results.replaceChildren();card('پرسش شما',q,'ذخیره‌شده روی همین دستگاه');card('ChatGPT','برای پاسخ واقعی، اتصال امن API و Backend باید راه‌اندازی شود.','در انتظار اتصال');card('DeepSeek','برای پاسخ واقعی، اتصال امن API و Backend باید راه‌اندازی شود.','در انتظار اتصال');card('Copilot','اتصال مستقیم از مسیر رسمی باید بررسی شود؛ فعلاً پاسخ خودکار در دسترس نیست.','در انتظار بررسی');history.unshift({prompt:q,createdAt:new Date().toISOString()});save();input.value=''});
+$('historyToggle').onclick=()=>$('historyPanel').classList.toggle('hidden');
+$('clearHistory').onclick=()=>{if(confirm('همه گفتگوهای ذخیره‌شده روی این دستگاه پاک شوند؟')){history=[];save()}};
+$('speakButton').onclick=()=>{if(!('speechSynthesis'in window)){$('voiceStatus').textContent='خواندن صوتی پشتیبانی نمی‌شود.';return}const t=input.value.trim();if(!t){$('voiceStatus').textContent='ابتدا متنی بنویسید.';return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=directionOf(t)==='rtl'?'fa-IR':'en-US';speechSynthesis.speak(u)};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+$('micButton').onclick=()=>{if(!SR){$('voiceStatus').textContent='تشخیص گفتار پشتیبانی نمی‌شود؛ از صفحه‌کلید صوتی گوشی استفاده کنید.';return}const r=new SR();r.lang='fa-IR';r.interimResults=false;r.maxAlternatives=1;r.onstart=()=>$('voiceStatus').textContent='در حال شنیدن...';r.onresult=e=>{input.value+=(input.value?' ':'')+e.results[0][0].transcript;$('voiceStatus').textContent='گفتار به متن تبدیل شد.'};r.onerror=e=>$('voiceStatus').textContent='خطای میکروفون: '+e.error;try{r.start()}catch{$('voiceStatus').textContent='شروع میکروفون ممکن نشد؛ مجوزها را بررسی کنید.'}};
+render();
+})();

@@ -1,20 +1,61 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101827"><meta name="description" content="دستیار سه‌هوشه">
-<title>دستیار سه‌هوشه</title><link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<meta name="description" content="دستیار سه‌هوشه؛ مقایسه دیدگاه‌های هوش مصنوعی">
+<title>دستیار سه‌هوشه</title>
+<link rel="stylesheet" href="styles.css">
 </head>
-<body><main class="app-shell">
-<header class="topbar"><div><p class="eyebrow">Dastیار 3Houshe</p><h1>دستیار سه‌هوشه</h1><p class="subhead">یک پرسش، سه دیدگاه؛ مقایسه در یک صفحه</p></div><button id="historyToggle" class="icon-button" aria-label="نمایش تاریخچه">☷</button></header>
-<section class="service-row" aria-label="وضعیت سرویس‌ها">
-<div class="service"><span class="dot"></span><b>ChatGPT</b><small>اتصال API نشده</small></div>
-<div class="service"><span class="dot"></span><b>DeepSeek</b><small>اتصال API نشده</small></div>
-<div class="service"><span class="dot"></span><b>Copilot</b><small>اتصال مستقیم بررسی نشده</small></div>
-</section>
-<section id="historyPanel" class="history-panel hidden"><div class="section-heading"><h2>گفتگوهای ذخیره‌شده</h2><button id="clearHistory" class="text-button">پاک‌کردن تاریخچه</button></div><div id="historyList" class="history-list"></div></section>
-<section class="welcome" id="welcome"><div class="orb">3</div><h2>چه چیزی می‌خواهی بپرسی؟</h2><p>پرسشت را بنویس یا با میکروفون بگو. در این نسخه رابط و ذخیرهٔ محلی فعال است؛ برای پاسخ واقعی باید سرویس‌ها متصل شوند.</p></section>
-<section id="results" class="results" aria-live="polite"></section>
-<form id="promptForm" class="composer"><textarea id="prompt" rows="2" placeholder="پیام خود را بنویسید..." aria-label="متن پرسش"></textarea><div class="composer-actions"><div class="left-actions"><button id="micButton" class="icon-button" type="button" aria-label="ورودی صوتی">🎙</button><button id="speakButton" class="icon-button" type="button" aria-label="خواندن متن">🔊</button></div><button id="sendButton" class="send-button" type="submit">ارسال پرسش</button></div><p id="voiceStatus" class="hint" role="status">برای استفاده از میکروفون، اجازهٔ دسترسی مرورگر را بدهید.</p></form>
-<footer>نسخهٔ آزمایشی · پاسخ واقعی مدل‌ها پس از راه‌اندازی Backend فعال می‌شود.</footer>
-</main><script src="app.js"></script></body></html>
+<body>
+<main class="app-shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">۳</div><div><p class="eyebrow">DASTYAR 3HOUSHE</p><h1>دستیار سه‌هوشه</h1><p class="subhead">یک پرسش، سه دیدگاه؛ کنار هم</p></div></div>
+    <button id="historyToggle" class="icon-button" type="button" aria-label="نمایش تاریخچه" title="تاریخچه">☷</button>
+  </header>
+
+  <section class="service-row" aria-label="وضعیت سرویس‌ها">
+    <div class="service"><span class="dot"></span><b>ChatGPT</b><small>آماده‌سازی اتصال</small></div>
+    <div class="service"><span class="dot"></span><b>DeepSeek</b><small>آماده‌سازی اتصال</small></div>
+    <div class="service"><span class="dot"></span><b>Copilot</b><small>ورود پاسخ دستی</small></div>
+  </section>
+
+  <section id="historyPanel" class="history-panel hidden">
+    <div class="section-heading"><div><h2>تاریخچه گفتگوها</h2><p class="muted tiny">ذخیره‌شده فقط روی همین دستگاه</p></div><button id="clearHistory" class="text-button" type="button">پاک‌کردن همه</button></div>
+    <div id="historyList" class="history-list"></div>
+  </section>
+
+  <section class="welcome" id="welcome">
+    <div class="welcome-icon">✦</div><p class="welcome-kicker">فضای مقایسه هوشمند</p>
+    <h2>امروز چه چیزی را بررسی کنیم؟</h2>
+    <p>سؤالت را یک‌بار بنویس و پاسخ‌ها را در کنار هم مقایسه کن. در این نسخه، اتصال مدل‌ها هنوز فعال نشده است.</p>
+    <div class="suggestions"><button type="button" class="suggestion">یک موضوع را ساده توضیح بده</button><button type="button" class="suggestion">این دو گزینه را مقایسه کن</button><button type="button" class="suggestion">برای حل یک مشکل راهکار بده</button></div>
+  </section>
+
+  <section id="results" class="results" aria-live="polite"></section>
+
+  <form id="promptForm" class="composer">
+    <label class="input-label" for="prompt">پرسش جدید</label>
+    <textarea id="prompt" rows="3" placeholder="پیام خود را اینجا بنویسید..." aria-label="متن پرسش"></textarea>
+    <div class="composer-bottom">
+      <div class="tool-actions">
+        <button id="micButton" class="tool-button" type="button" aria-label="ورودی صوتی">🎙 <span>گفتار</span></button>
+        <button id="clearInput" class="tool-button" type="button" aria-label="پاک‌کردن متن">⌫ <span>پاک‌کردن</span></button>
+      </div>
+      <button id="sendButton" class="send-button" type="submit">ارسال پرسش <span>←</span></button>
+    </div>
+    <p id="voiceStatus" class="hint" role="status">برای میکروفون، اجازه دسترسی مرورگر لازم است.</p>
+  </form>
+
+  <section class="audio-bar" aria-label="کنترل خواندن متن">
+    <span>خواندن پاسخ با صدا</span>
+    <div class="audio-actions"><button id="speakButton" type="button">▶ پخش</button><button id="pauseButton" type="button">Ⅱ مکث</button><button id="stopButton" type="button">■ توقف</button></div>
+    <label class="voice-select">صدا <select id="voiceChoice"><option value="default">پیش‌فرض فارسی</option><option value="female">صدای زن (در صورت پشتیبانی)</option><option value="male">صدای مرد (در صورت پشتیبانی)</option></select></label>
+  </section>
+
+  <footer><span>نسخه آزمایشی</span><span>پاسخ واقعی مدل‌ها پس از اتصال امن فعال می‌شود.</span></footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

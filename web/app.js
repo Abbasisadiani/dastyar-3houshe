@@ -27,6 +27,45 @@ function renderModelCards(item){
  compare.addEventListener('click',()=>{const live=getCurrent();if(!live)return;models.forEach(([k])=>{live.answers=live.answers||{};const el=results.querySelector('[aria-label="پاسخ '+models.find(m=>m[0]===k)[1]+'"]');if(el)live.answers[k]=el.value.trim()});persist();renderComparison(live);setStatus('پاسخ‌ها در نمای مقایسه نمایش داده شدند.')});
  toolbar.append(title,compare);results.append(toolbar);
  const compareBox=document.createElement('section');compareBox.id='compareBox';compareBox.className='compare-grid';results.append(compareBox);renderComparison(item);
+ renderEvaluation(item);
+}
+function renderEvaluation(item){
+ const panel=document.createElement('section');panel.className='evaluation-panel';panel.id='evaluationPanel';
+ const heading=document.createElement('h2');heading.textContent='ارزیابی و امتیازدهی پاسخ‌ها';panel.append(heading);
+ const note=document.createElement('p');note.className='evaluation-note';note.textContent='برای هر پاسخ از ۱ تا ۵ امتیاز بده. این ارزیابی دستی است و توسط مدل هوش مصنوعی انجام نمی‌شود.';panel.append(note);
+ const criteria=[['accuracy','دقت و درستی'],['completeness','کامل‌بودن'],['clarity','وضوح بیان'],['reasoning','استدلال و منطق']];
+ const table=document.createElement('div');table.className='evaluation-table';
+ const header=document.createElement('div');header.className='evaluation-row evaluation-header';
+ const blank=document.createElement('b');blank.textContent='معیار';header.append(blank);
+ models.forEach(([,label])=>{const b=document.createElement('b');b.textContent=label;header.append(b)});table.append(header);
+ item.review=item.review||{};
+ criteria.forEach(([key,label])=>{
+  const row=document.createElement('div');row.className='evaluation-row';
+  const name=document.createElement('span');name.textContent=label;row.append(name);
+  models.forEach(([modelKey])=>{
+   const select=document.createElement('select');select.setAttribute('aria-label',label+' - '+modelKey);
+   [['0','—'],['1','۱'],['2','۲'],['3','۳'],['4','۴'],['5','۵']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;select.append(o)});
+   select.value=String(item.review[modelKey]?.[key]??0);
+   select.addEventListener('change',()=>{item.review[modelKey]=item.review[modelKey]||{};item.review[modelKey][key]=Number(select.value);persist();updateEvaluationSummary(item,summary)});
+   row.append(select);
+  });table.append(row);
+ });panel.append(table);
+ const summary=document.createElement('div');summary.className='evaluation-summary';panel.append(summary);
+ updateEvaluationSummary(item,summary);
+ const disclaimer=document.createElement('p');disclaimer.className='evaluation-note';disclaimer.textContent='امتیاز صفر یعنی هنوز ارزیابی نشده است. میانگین فقط بر اساس معیارهای امتیازگرفته‌شده محاسبه می‌شود.';panel.append(disclaimer);
+ results.append(panel);
+}
+function updateEvaluationSummary(item,summary){
+ summary.replaceChildren();
+ models.forEach(([key,label])=>{
+  const scores=Object.values(item.review?.[key]||{}).filter(v=>Number(v)>0).map(Number);
+  const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(2):'—';
+  const box=document.createElement('div');box.className='evaluation-score';
+  const name=document.createElement('b');name.textContent=label;
+  const value=document.createElement('strong');value.textContent=avg==='—'?'بدون امتیاز':avg+' از ۵';
+  const count=document.createElement('small');count.textContent=scores.length+' معیار از ۴';
+  box.append(name,value,count);summary.append(box);
+ });
 }
 function renderComparison(item){const box=$('compareBox');if(!box)return;box.replaceChildren();models.forEach(([key,label])=>{const cell=document.createElement('article');cell.className='compare-cell';const h=document.createElement('h3');h.textContent=label;const p=document.createElement('p');const value=item.answers?.[key]||'';p.textContent=value||'هنوز پاسخی ثبت نشده است.';p.dir=directionOf(value);if(!value)p.className='compare-empty';cell.append(h,p);box.append(cell)})}
 function renderCurrent(item){currentId=item.id;welcome.classList.add('hidden');results.replaceChildren();plainCard('پرسش شما',item.prompt,'پرسش ذخیره‌شده روی همین دستگاه');renderModelCards(item);$('historyPanel').classList.add('hidden')}

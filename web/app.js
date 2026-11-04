@@ -3,6 +3,9 @@
 const $=id=>document.getElementById(id),form=$('promptForm'),input=$('prompt'),results=$('results'),welcome=$('welcome');
 const KEY='dastyar3houshe.history.v3',models=[['chatgpt','ChatGPT'],['deepseek','DeepSeek'],['copilot','Copilot']];
 let history=[],currentId=null,lastSpoken='';
+const THEME_KEY='dastyar3houshe.theme.v1';
+function applyTheme(theme){const chosen=theme==='light'?'light':'dark';document.body.dataset.theme=chosen;const icon=$('themeIcon');if(icon)icon.textContent=chosen==='dark'?'☀️':'🌙';const btn=$('themeToggle');if(btn){btn.title=chosen==='dark'?'فعال‌کردن تم روشن':'فعال‌کردن تم تیره';btn.setAttribute('aria-label',btn.title)}const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=chosen==='dark'?'#101827':'#f4f7ff';try{localStorage.setItem(THEME_KEY,chosen)}catch{}}
+let savedTheme='dark';try{savedTheme=localStorage.getItem(THEME_KEY)||'dark'}catch{}
 try{history=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(history))history=[]}catch{history=[]}
 const directionOf=t=>/[\u0590-\u08FF]/.test(t)?'rtl':'ltr';
 function setStatus(t){$('voiceStatus').textContent=t}
@@ -83,5 +86,7 @@ function speak(){if(!('speechSynthesis'in window)){setStatus('خواندن صو�
 $('speakButton').addEventListener('click',speak);
 $('pauseButton').addEventListener('click',()=>{if(!('speechSynthesis'in window))return;if(speechSynthesis.speaking&&!speechSynthesis.paused){speechSynthesis.pause();setStatus('پخش مکث شد.')}else if(speechSynthesis.paused){speechSynthesis.resume();setStatus('ادامه پخش...')}});
 $('stopButton').addEventListener('click',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();setStatus('پخش متوقف شد.')});
+$('themeToggle').addEventListener('click',()=>applyTheme(document.body.dataset.theme==='dark'?'light':'dark'));
+applyTheme(savedTheme);
 renderHistory();
 })();
